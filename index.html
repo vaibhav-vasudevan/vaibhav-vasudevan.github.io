@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vaibhav Vasudevan - Life</title>
+  <style>
+    /* Base Page */
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      font-family: 'Georgia', serif;
+      background: url('your-desktop-image.jpg') center/cover no-repeat;
+      color: #1c1c1c;
+      line-height: 1.7;
+      font-size: 18px;
+      user-select: none;
+    }
+
+    /* Draggable Window */
+    .draggable-window {
+      position: absolute;
+      width: 80%;
+      max-width: 1000px;
+      min-width: 300px;
+      height: 90vh;
+      min-height: 500px;
+      background: rgba(255, 255, 255, 0.97);
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+      transition: left 0.2s ease, top 0.2s ease, box-shadow 0.3s ease, transform 0.3s ease;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+    }
+    .draggable-window:hover {
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      transform: translateY(-2px);
+    }
+    .draggable-window.active-window {
+      z-index: 1000;
+    }
+
+    /* Title Bar */
+    .title-bar {
+      height: 40px;
+      background: #f5f5f5;
+      border-bottom: 1px solid #e0e0e0;
+      cursor: move;
+      user-select: none;
+      flex-shrink: 0;
+    }
+
+    /* Content Area */
+    .content-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 25px 35px;
+      user-select: text;
+      opacity: 1;
+      transition: opacity 0.3s ease-in-out;
+    }
+    .content-area.loaded {
+      opacity: 1;
+    }
+    .content-area:not(.loaded) {
+      opacity: 0;
+    }
+
+    header {
+      font-size: 2.4em;
+      text-align: center;
+      margin: 0 0 20px 0;
+    }
+    .links {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 1.15em;
+    }
+    .links a {
+      color: #b35454;
+      text-decoration: none;
+      margin: 0 12px;
+    }
+    section {
+      margin: 20px 0;
+    }
+    h2 {
+      font-size: 1.4em;
+      margin-bottom: 10px;
+    }
+    ul {
+      padding-left: 30px;
+      margin: 10px 0;
+    }
+    ul li {
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    /* Image Popup Container */
+    .image-popup {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 8px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+      overflow: hidden;
+      min-width: 300px;
+      min-height: 200px;
+      max-width: 80vw;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      z-index: 500;
+      transform: scale(0.95);
+      transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+      opacity: 0;
+    }
+    .image-popup.active {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    /* Popup Title Bar */
+    .popup-title-bar {
+      background: rgba(0, 0, 0, 0.85);
+      color: white;
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: move;
+      user-select: none;
+    }
+
+    .popup-close {
+      background: #ff4444;
+      border: none;
+      color: white;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 12px;
+      line-height: 1;
+      transition: background 0.2s ease;
+    }
+    .popup-close:hover {
+      background: #ff6666;
+    }
+
+    /* Image Content */
+    .popup-content {
+      position: relative;
+      flex: 1;
+      padding: 15px;
+      min-height: 0;
+    }
+
+    .popup-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 4px;
+    }
+
+    /* Resize Handles */
+    .resize-handle {
+      position: absolute;
+      background: rgba(179, 84, 84, 0.4);
+      transition: all 0.2s ease;
+      z-index: 2;
+    }
+    .resize-handle:hover {
+      background: #b35454;
+    }
+    .resize-e {
+      cursor: ew-resize;
+      width: 8px;
+      right: 0;
+      top: 0;
+      height: 100%;
+    }
+    .resize-s {
+      cursor: ns-resize;
+      height: 8px;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+    }
+    .resize-se {
+      cursor: nwse-resize;
+      width: 15px;
+      height: 15px;
+      right: 0;
+      bottom: 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Draggable Window -->
+  <div class="draggable-window" id="myWindow">
+    <!-- Title Bar -->
+    <div class="title-bar" id="titleBar"></div>
+
+    <!-- Content Area -->
+    <div class="content-area loaded">
+      <header>Vaibhav Vasudevan</header>
+      <div class="links">
+        <a href="#" data-content="life.html">life</a> |
+        <a href="#" data-content="projects.html">projects</a> |
+        <a href="#" data-content="thoughts.html">thoughts</a> |
+        <a href="#" data-content="findmy.html">find my</a>
+      </div>
+
+      <!-- Life Content -->
+      <section>
+        <h2>about me</h2>
+        <p>
+          i grew up in omaha, nebraska</a> until 6th grade. i moved to nova, went to tj, and currently study physics at umd.
+          i enjoy playing the carnatic violin, consuming all sorts of content,
+          and hanging out with my friends.
+        </p>
+      </section>
+
+      <section>
+        <h2>stuff i've done</h2>
+        <ul>
+          <li>did consulting for b2c startups — a learning experience but not ideal if you want to feel fulfilled</li>
+          <li>worked with close friends to build a vc-backed photonic semiconductor chip startup <a href="https://www.procyoncorp.io/">procyon photonics</a></li>
+          <li>harvard sociology project under <a href="https://sociology.fas.harvard.edu/people/adaner-usmani">dr. usmani</a> on historical incarceration; visited a jail</li>          
+          <li>interned at wustl olin</li>
+          <li>curating top tier talent in the <a href="https://www.linkedin.com/feed/update/urn:li:activity:7276993719323508736/">dmv</a></li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>stuff i want to do</h2>
+        <ul>
+          <li>grow my own potatoes + goats on mountaintops</li>
+          <li>drive across a random desert like muad dib (instead of sandworms)</li>
+          <li>skydive at night</li>
+          <li>invest in people and host events</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    // Draggable window functionality
+    const myWindow = document.getElementById('myWindow');
+    const titleBar = document.getElementById('titleBar');
+    let isDragging = false;
+    let dragStartX, dragStartY;
+    let initialLeft, initialTop;
+
+    // Z-index management
+    let zIndexCounter = 1000;
+    const bringToFront = (element) => {
+      zIndexCounter++;
+      element.style.zIndex = zIndexCounter;
+    };
+
+    // Window positioning
+    window.addEventListener('load', () => {
+      const rect = myWindow.getBoundingClientRect();
+      myWindow.style.left = (window.innerWidth - rect.width) / 2 + 'px';
+      myWindow.style.top  = (window.innerHeight - rect.height) / 2 + 'px';
+    });
+
+    window.addEventListener('resize', () => {
+      const rect = myWindow.getBoundingClientRect();
+      const maxLeft = window.innerWidth - rect.width;
+      const maxTop  = window.innerHeight - rect.height;
+      let newLeft   = Math.min(rect.left, maxLeft);
+      let newTop    = Math.min(rect.top, maxTop);
+      newLeft = Math.max(0, newLeft);
+      newTop  = Math.max(0, newTop);
+      myWindow.style.left = newLeft + 'px';
+      myWindow.style.top  = newTop  + 'px';
+    });
+
+    // Dragging functionality
+    titleBar.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      const rect = myWindow.getBoundingClientRect();
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+      initialLeft = rect.left;
+      initialTop  = rect.top;
+      myWindow.style.transition = 'none';
+      bringToFront(myWindow);
+      myWindow.classList.add('active-window');
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        const dx = e.clientX - dragStartX;
+        const dy = e.clientY - dragStartY;
+        let newLeft = initialLeft + dx;
+        let newTop  = initialTop + dy;
+
+        const maxLeft = window.innerWidth - myWindow.offsetWidth;
+        const maxTop  = window.innerHeight - myWindow.offsetHeight;
+        newLeft = Math.max(0, Math.min(newLeft, maxLeft));
+        newTop  = Math.max(0, Math.min(newTop, maxTop));
+
+        myWindow.style.left = newLeft + 'px';
+        myWindow.style.top  = newTop + 'px';
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        myWindow.style.transition = 'left 0.2s ease, top 0.2s ease, box-shadow 0.3s ease, transform 0.3s ease';
+      }
+    });
+
+    document.addEventListener('selectstart', (e) => {
+      if (isDragging) e.preventDefault();
+    });
+
+    // Modified dynamic content loading
+    document.querySelectorAll('.links a[data-content]').forEach(link => {
+      link.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const contentFile = link.getAttribute('data-content');
+        
+        try {
+          const response = await fetch(contentFile);
+          const text = await response.text();
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(text, 'text/html');
+          
+          // Preserve header and update only sections
+          const contentArea = document.querySelector('.content-area');
+          const existingHeader = contentArea.querySelector('header');
+          const existingLinks = contentArea.querySelector('.links');
+          
+          // Fade out transition
+          contentArea.classList.remove('loaded');
+          
+          setTimeout(() => {
+            // Clear existing content except header and links
+            contentArea.innerHTML = '';
+            contentArea.appendChild(existingHeader);
+            contentArea.appendChild(existingLinks);
+            
+            // Add new sections
+            const newSections = doc.querySelectorAll('section');
+            newSections.forEach(section => {
+              contentArea.appendChild(section);
+            });
+            
+            // Fade in transition
+            contentArea.classList.add('loaded');
+          }, 300);
+          
+          bringToFront(myWindow);
+          
+        } catch (error) {
+          console.error('Error loading content:', error);
+        }
+      });
+    });
+
+    // Image Popup Functionality
+    document.addEventListener('click', function(e) {
+      const tagLink = e.target.closest('a[data-image]');
+      if (tagLink) {
+        e.preventDefault();
+        const src = tagLink.getAttribute('data-image');
+        const caption = tagLink.getAttribute('data-caption') || 'Image Preview';
+
+        // Remove existing popups
+        document.querySelectorAll('.image-popup').forEach(el => el.remove());
+
+        // Create popup container
+        const popup = document.createElement('div');
+        popup.className = 'image-popup';
+        
+        // Smart positioning
+        const mainWindowRect = myWindow.getBoundingClientRect();
+        popup.style.left = `${mainWindowRect.right + 20}px`;
+        popup.style.top = `${mainWindowRect.top}px`;
+        popup.style.width = '400px';
+        popup.style.height = '300px';
+
+        popup.innerHTML = `
+          <div class="popup-title-bar">
+            <span>${caption}</span>
+            <button class="popup-close">×</button>
+          </div>
+          <div class="popup-content">
+            <img class="popup-image" src="${src}">
+            <div class="resize-handle resize-e"></div>
+            <div class="resize-handle resize-s"></div>
+            <div class="resize-handle resize-se"></div>
+          </div>
+        `;
+
+        document.body.appendChild(popup);
+        
+        // Activation animation
+        setTimeout(() => {
+          popup.classList.add('active');
+          bringToFront(popup);
+        }, 10);
+
+        // Initialize interactions
+        initPopupInteractions(popup);
+      }
+    });
+
+    // Popup interactions
+    function initPopupInteractions(popup) {
+      let startWidth, startHeight, startX, startY;
+      let isResizing = false;
+      let resizeEdge;
+
+      const img = popup.querySelector('.popup-image');
+      
+      // Resize handles
+      popup.querySelectorAll('.resize-handle').forEach(handle => {
+        handle.addEventListener('mousedown', initResize);
+      });
+
+      function initResize(e) {
+        isResizing = true;
+        resizeEdge = this.classList[1];
+        startWidth = popup.offsetWidth;
+        startHeight = popup.offsetHeight;
+        startX = e.clientX;
+        startY = e.clientY;
+        popup.style.transition = 'none';
+        
+        document.addEventListener('mousemove', resize);
+        document.addEventListener('mouseup', stopResize);
+        e.preventDefault();
+      }
+
+      function resize(e) {
+        if (!isResizing) return;
+        
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+
+        let newWidth = startWidth;
+        let newHeight = startHeight;
+
+        switch(resizeEdge) {
+          case 'resize-e':
+            newWidth = Math.min(window.innerWidth, Math.max(300, startWidth + dx));
+            break;
+          case 'resize-s':
+            newHeight = Math.min(window.innerHeight, Math.max(200, startHeight + dy));
+            break;
+          case 'resize-se':
+            newWidth = Math.min(window.innerWidth, Math.max(300, startWidth + dx));
+            newHeight = Math.min(window.innerHeight, Math.max(200, startHeight + dy));
+            break;
+        }
+
+        popup.style.width = `${newWidth}px`;
+        popup.style.height = `${newHeight}px`;
+      }
+
+      function stopResize() {
+        isResizing = false;
+        popup.style.transition = 'all 0.2s ease';
+        document.removeEventListener('mousemove', resize);
+        document.removeEventListener('mouseup', stopResize);
+      }
+
+      // Close button
+      popup.querySelector('.popup-close').addEventListener('click', () => {
+        popup.remove();
+      });
+
+      // Bring to front when clicked
+      popup.addEventListener('mousedown', () => {
+        bringToFront(popup);
+      });
+    }
+  </script>
+</body>
+</html>
