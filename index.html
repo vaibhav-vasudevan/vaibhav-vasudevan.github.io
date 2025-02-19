@@ -486,6 +486,39 @@
         bringToFront(popup);
       });
     }
+
+    function addJSONLD() {
+      const jsonLD = {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Vaibhav Vasudevan",
+        "url": "https://yourwebsite.com",
+        "sameAs": [
+          "https://www.linkedin.com/in/yourprofile",
+          "https://github.com/yourgithub",
+          "https://twitter.com/yourhandle"
+        ],
+        "jobTitle": "Physics Student & Startup Founder",
+        "alumniOf": {
+          "@type": "EducationalOrganization",
+          "name": "University of Maryland"
+        },
+        "knowsAbout": ["Physics", "AI", "Startups", "Carnatic Violin"],
+        "worksFor": {
+          "@type": "Organization",
+          "name": "Procyon Photonics",
+          "url": "https://www.procyoncorp.io/"
+        },
+        "description": "Vaibhav Vasudevan is a physics student at UMD with experience in AI, startups, and photonic semiconductors."
+      };
+
+      const script = document.createElement("script");
+      script.type = "application/ld+json";
+      script.textContent = JSON.stringify(jsonLD);
+      document.body.appendChild(script);
+    }
+
+    window.addEventListener("load", addJSONLD);
   </script>
 </body>
 </html>
