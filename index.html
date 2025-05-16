@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Vaibhav Vasudevan - Life</title>
+  <title>Vaibhav Vasudevan</title>
+
+  <!-- ----------  STYLES  ---------- -->
   <style>
     /* Base Page */
     html, body {
@@ -30,19 +32,14 @@
       background: rgba(255, 255, 255, 0.97);
       border-radius: 12px;
       box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-      transition: left 0.2s ease, top 0.2s ease, box-shadow 0.3s ease, transform 0.3s ease;
+      transition: left .2s ease, top .2s ease, box-shadow .3s ease, transform .3s ease;
       overflow: hidden;
       display: flex;
       flex-direction: column;
       z-index: 100;
     }
-    .draggable-window:hover {
-      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-      transform: translateY(-2px);
-    }
-    .draggable-window.active-window {
-      z-index: 1000;
-    }
+    .draggable-window:hover      { box-shadow: 0 10px 30px rgba(0,0,0,.25); transform: translateY(-2px); }
+    .active-window               { z-index: 1000 !important; }
 
     /* Title Bar */
     .title-bar {
@@ -50,7 +47,6 @@
       background: #f5f5f5;
       border-bottom: 1px solid #e0e0e0;
       cursor: move;
-      user-select: none;
       flex-shrink: 0;
     }
 
@@ -59,155 +55,63 @@
       flex: 1;
       overflow-y: auto;
       padding: 25px 35px;
-      user-select: text;
       opacity: 1;
-      transition: opacity 0.3s ease-in-out;
+      transition: opacity .3s ease-in-out;
     }
-    .content-area.loaded {
-      opacity: 1;
-    }
-    .content-area:not(.loaded) {
-      opacity: 0;
-    }
+    .content-area:not(.loaded) { opacity: 0; }
 
-    header {
-      font-size: 2.4em;
-      text-align: center;
-      margin: 0 0 20px 0;
-    }
-    .links {
-      text-align: center;
-      margin-bottom: 20px;
-      font-size: 1.15em;
-    }
-    .links a {
-      color: #b35454;
-      text-decoration: none;
-      margin: 0 12px;
-    }
-    section {
-      margin: 20px 0;
-    }
-    h2 {
-      font-size: 1.4em;
-      margin-bottom: 10px;
-    }
-    ul {
-      padding-left: 30px;
-      margin: 10px 0;
-    }
-    ul li {
-      margin-bottom: 8px;
-      line-height: 1.5;
-    }
+    header         { font-size: 2.4em; text-align: center; margin: 0 0 20px; }
+    .links         { text-align: center; margin-bottom: 20px; font-size: 1.15em; }
+    .links a       { color: #b35454; text-decoration: none; margin: 0 12px; }
+    section        { margin: 20px 0; }
+    h2             { font-size: 1.4em; margin-bottom: 10px; }
+    ul             { padding-left: 30px; margin: 10px 0; }
+    ul li          { margin-bottom: 8px; line-height: 1.5; }
 
-    /* Image Popup Container */
+    /* Image Popup */
     .image-popup {
       position: absolute;
-      background: rgba(255, 255, 255, 0.98);
+      background: rgba(255,255,255,.98);
       border-radius: 8px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+      box-shadow: 0 5px 20px rgba(0,0,0,.15);
       overflow: hidden;
-      min-width: 300px;
-      min-height: 200px;
-      max-width: 80vw;
-      max-height: 80vh;
-      display: flex;
-      flex-direction: column;
-      z-index: 500;
-      transform: scale(0.95);
-      transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-      opacity: 0;
+      min-width: 300px; min-height: 200px;
+      max-width: 80vw;  max-height: 80vh;
+      display: flex; flex-direction: column;
+      z-index: 500; transform: scale(.95); opacity: 0;
+      transition: all .3s cubic-bezier(.18,.89,.32,1.28);
     }
-    .image-popup.active {
-      transform: scale(1);
-      opacity: 1;
-    }
+    .image-popup.active { transform: scale(1); opacity: 1; }
 
-    /* Popup Title Bar */
     .popup-title-bar {
-      background: rgba(0, 0, 0, 0.85);
-      color: white;
-      padding: 8px 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      background: rgba(0,0,0,.85); color: #fff; padding: 8px 12px;
+      display: flex; justify-content: space-between; align-items: center;
       cursor: move;
-      user-select: none;
     }
-
     .popup-close {
-      background: #ff4444;
-      border: none;
-      color: white;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 12px;
-      line-height: 1;
-      transition: background 0.2s ease;
+      background: #ff4444; border: none; color: #fff;
+      width: 20px; height: 20px; border-radius: 50%;
+      cursor: pointer; font-size: 12px; line-height: 1;
     }
-    .popup-close:hover {
-      background: #ff6666;
-    }
+    .popup-close:hover { background: #ff6666; }
 
-    /* Image Content */
-    .popup-content {
-      position: relative;
-      flex: 1;
-      padding: 15px;
-      min-height: 0;
-    }
+    .popup-content { position: relative; flex: 1; padding: 15px; }
+    .popup-image   { width: 100%; height: 100%; object-fit: contain; border-radius: 4px; }
 
-    .popup-image {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      border-radius: 4px;
-    }
-
-    /* Resize Handles */
-    .resize-handle {
-      position: absolute;
-      background: rgba(179, 84, 84, 0.4);
-      transition: all 0.2s ease;
-      z-index: 2;
-    }
-    .resize-handle:hover {
-      background: #b35454;
-    }
-    .resize-e {
-      cursor: ew-resize;
-      width: 8px;
-      right: 0;
-      top: 0;
-      height: 100%;
-    }
-    .resize-s {
-      cursor: ns-resize;
-      height: 8px;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-    }
-    .resize-se {
-      cursor: nwse-resize;
-      width: 15px;
-      height: 15px;
-      right: 0;
-      bottom: 0;
-    }
+    .resize-handle { position: absolute; background: rgba(179,84,84,.4); z-index: 2; }
+    .resize-handle:hover { background: #b35454; }
+    .resize-e  { cursor: ew-resize; width: 8px; right: 0; top: 0; height: 100%; }
+    .resize-s  { cursor: ns-resize; height: 8px; bottom: 0; left: 0; width: 100%; }
+    .resize-se { cursor: nwse-resize; width: 15px; height: 15px; right: 0; bottom: 0; }
   </style>
 </head>
+
 <body>
   <!-- Draggable Window -->
   <div class="draggable-window" id="myWindow">
-    <!-- Title Bar -->
     <div class="title-bar" id="titleBar"></div>
 
-    <!-- Content Area -->
-    <div class="content-area loaded">
+    <div class="content-area loaded" id="contentArea">
       <header>Vaibhav Vasudevan</header>
       <div class="links">
         <a href="#" data-content="index.html">life</a> |
@@ -216,13 +120,13 @@
         <a href="#" data-content="findmy.html">find my</a>
       </div>
 
-      <!-- Life Content -->
+      <!-- — default “life” page content — -->
       <section>
         <h2>about me</h2>
         <p>
-          i grew up in omaha, nebraska</a> until 6th grade. i moved to nova, went to tj, and currently study physics at umd.
-          i enjoy playing the carnatic violin, consuming all sorts of content,
-          and hanging out with my friends.
+          i grew up in omaha, nebraska until 6th grade. i moved to nova, went to tj,
+          and currently study physics at umd. i enjoy playing the carnatic violin,
+          consuming all sorts of content, and hanging out with my friends.
         </p>
       </section>
 
@@ -230,10 +134,13 @@
         <h2>stuff i've done</h2>
         <ul>
           <li>did consulting for b2c startups — a learning experience but not ideal if you want to feel fulfilled</li>
-          <li>worked with close friends to build a vc-backed photonic semiconductor chip startup <a href="https://www.procyoncorp.io/">procyon photonics</a></li>
-          <li>harvard sociology project under <a href="https://sociology.fas.harvard.edu/people/adaner-usmani">dr. usmani</a> on historical incarceration; visited a jail</li>          
+          <li>worked with close friends to build a vc-backed photonic semiconductor chip startup
+              <a href="https://www.procyoncorp.io/">procyon photonics</a></li>
+          <li>harvard sociology project under <a href="https://sociology.fas.harvard.edu/people/adaner-usmani">dr. usmani</a>
+              on historical incarceration; visited a jail</li>
           <li>interned at wustl olin</li>
-          <li>curating top tier talent in the <a href="https://www.linkedin.com/feed/update/urn:li:activity:7276993719323508736/">dmv</a></li>
+          <li>curating top-tier talent in the
+              <a href="https://www.linkedin.com/feed/update/urn:li:activity:7276993719323508736/">dmv</a></li>
         </ul>
       </section>
 
@@ -249,276 +156,156 @@
     </div>
   </div>
 
+  <!-- ----------  SCRIPTS  ---------- -->
   <script>
-    // Draggable window functionality
-    const myWindow = document.getElementById('myWindow');
-    const titleBar = document.getElementById('titleBar');
-    let isDragging = false;
-    let dragStartX, dragStartY;
-    let initialLeft, initialTop;
+    /* ────────── draggable window ────────── */
+    const win   = document.getElementById('myWindow');
+    const bar   = document.getElementById('titleBar');
+    let drag    = false, sx = 0, sy = 0, ix = 0, iy = 0;
+    const bring = el => { el.classList.add('active-window'); };
 
-    // Z-index management
-    let zIndexCounter = 1000;
-    const bringToFront = (element) => {
-      zIndexCounter++;
-      element.style.zIndex = zIndexCounter;
-    };
-
-    // Window positioning
     window.addEventListener('load', () => {
-      const rect = myWindow.getBoundingClientRect();
-      myWindow.style.left = (window.innerWidth - rect.width) / 2 + 'px';
-      myWindow.style.top  = (window.innerHeight - rect.height) / 2 + 'px';
+      const r = win.getBoundingClientRect();
+      win.style.left = (innerWidth  - r.width ) / 2 + 'px';
+      win.style.top  = (innerHeight - r.height) / 2 + 'px';
     });
-
     window.addEventListener('resize', () => {
-      const rect = myWindow.getBoundingClientRect();
-      const maxLeft = window.innerWidth - rect.width;
-      const maxTop  = window.innerHeight - rect.height;
-      let newLeft   = Math.min(rect.left, maxLeft);
-      let newTop    = Math.min(rect.top, maxTop);
-      newLeft = Math.max(0, newLeft);
-      newTop  = Math.max(0, newTop);
-      myWindow.style.left = newLeft + 'px';
-      myWindow.style.top  = newTop  + 'px';
+      const r = win.getBoundingClientRect();
+      win.style.left = Math.min(Math.max(0, r.left), innerWidth  - r.width ) + 'px';
+      win.style.top  = Math.min(Math.max(0, r.top ), innerHeight - r.height) + 'px';
     });
 
-    // Dragging functionality
-    titleBar.addEventListener('mousedown', (e) => {
-      isDragging = true;
-      const rect = myWindow.getBoundingClientRect();
-      dragStartX = e.clientX;
-      dragStartY = e.clientY;
-      initialLeft = rect.left;
-      initialTop  = rect.top;
-      myWindow.style.transition = 'none';
-      bringToFront(myWindow);
-      myWindow.classList.add('active-window');
+    bar.addEventListener('mousedown', e => {
+      drag = true; sx = e.clientX; sy = e.clientY;
+      const r = win.getBoundingClientRect(); ix = r.left; iy = r.top;
+      win.style.transition = 'none'; bring(win);
     });
-
-    document.addEventListener('mousemove', (e) => {
-      if (isDragging) {
-        const dx = e.clientX - dragStartX;
-        const dy = e.clientY - dragStartY;
-        let newLeft = initialLeft + dx;
-        let newTop  = initialTop + dy;
-
-        const maxLeft = window.innerWidth - myWindow.offsetWidth;
-        const maxTop  = window.innerHeight - myWindow.offsetHeight;
-        newLeft = Math.max(0, Math.min(newLeft, maxLeft));
-        newTop  = Math.max(0, Math.min(newTop, maxTop));
-
-        myWindow.style.left = newLeft + 'px';
-        myWindow.style.top  = newTop + 'px';
-      }
+    document.addEventListener('mousemove', e => {
+      if (!drag) return;
+      let nx = ix + e.clientX - sx, ny = iy + e.clientY - sy;
+      nx = Math.max(0, Math.min(nx, innerWidth  - win.offsetWidth ));
+      ny = Math.max(0, Math.min(ny, innerHeight - win.offsetHeight));
+      win.style.left = nx + 'px'; win.style.top = ny + 'px';
     });
-
     document.addEventListener('mouseup', () => {
-      if (isDragging) {
-        isDragging = false;
-        myWindow.style.transition = 'left 0.2s ease, top 0.2s ease, box-shadow 0.3s ease, transform 0.3s ease';
-      }
+      drag = false;
+      win.style.transition = 'left .2s ease, top .2s ease, box-shadow .3s ease, transform .3s ease';
     });
+    document.addEventListener('selectstart', e => { if (drag) e.preventDefault(); });
 
-    document.addEventListener('selectstart', (e) => {
-      if (isDragging) e.preventDefault();
-    });
+    /* ────────── content loader ────────── */
+    const area = document.getElementById('contentArea');
 
-    // Modified dynamic content loading
-    document.querySelectorAll('.links a[data-content]').forEach(link => {
-      link.addEventListener('click', async (e) => {
-        e.preventDefault();
-        const contentFile = link.getAttribute('data-content');
-        
-        try {
-          const response = await fetch(contentFile);
-          const text = await response.text();
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(text, 'text/html');
-          
-          // Preserve header and update only sections
-          const contentArea = document.querySelector('.content-area');
-          const existingHeader = contentArea.querySelector('header');
-          const existingLinks = contentArea.querySelector('.links');
-          
-          // Fade out transition
-          contentArea.classList.remove('loaded');
-          
-          setTimeout(() => {
-            // Clear existing content except header and links
-            contentArea.innerHTML = '';
-            contentArea.appendChild(existingHeader);
-            contentArea.appendChild(existingLinks);
-            
-            // Add new sections
-            const newSections = doc.querySelectorAll('section');
-            newSections.forEach(section => {
-              contentArea.appendChild(section);
-            });
-            
-            // Fade in transition
-            contentArea.classList.add('loaded');
-          }, 300);
-          
-          bringToFront(myWindow);
-          
-        } catch (error) {
-          console.error('Error loading content:', error);
-        }
-      });
-    });
-
-    // Image Popup Functionality
-    document.addEventListener('click', function(e) {
-      const tagLink = e.target.closest('a[data-image]');
-      if (tagLink) {
-        e.preventDefault();
-        const src = tagLink.getAttribute('data-image');
-        const caption = tagLink.getAttribute('data-caption') || 'Image Preview';
-
-        // Remove existing popups
-        document.querySelectorAll('.image-popup').forEach(el => el.remove());
-
-        // Create popup container
-        const popup = document.createElement('div');
-        popup.className = 'image-popup';
-        
-        // Smart positioning
-        const mainWindowRect = myWindow.getBoundingClientRect();
-        popup.style.left = `${mainWindowRect.right + 20}px`;
-        popup.style.top = `${mainWindowRect.top}px`;
-        popup.style.width = '400px';
-        popup.style.height = '300px';
-
-        popup.innerHTML = `
-          <div class="popup-title-bar">
-            <span>${caption}</span>
-            <button class="popup-close">×</button>
-          </div>
-          <div class="popup-content">
-            <img class="popup-image" src="${src}">
-            <div class="resize-handle resize-e"></div>
-            <div class="resize-handle resize-s"></div>
-            <div class="resize-handle resize-se"></div>
-          </div>
-        `;
-
-        document.body.appendChild(popup);
-        
-        // Activation animation
-        setTimeout(() => {
-          popup.classList.add('active');
-          bringToFront(popup);
-        }, 10);
-
-        // Initialize interactions
-        initPopupInteractions(popup);
-      }
-    });
-
-    // Popup interactions
-    function initPopupInteractions(popup) {
-      let startWidth, startHeight, startX, startY;
-      let isResizing = false;
-      let resizeEdge;
-
-      const img = popup.querySelector('.popup-image');
-      
-      // Resize handles
-      popup.querySelectorAll('.resize-handle').forEach(handle => {
-        handle.addEventListener('mousedown', initResize);
-      });
-
-      function initResize(e) {
-        isResizing = true;
-        resizeEdge = this.classList[1];
-        startWidth = popup.offsetWidth;
-        startHeight = popup.offsetHeight;
-        startX = e.clientX;
-        startY = e.clientY;
-        popup.style.transition = 'none';
-        
-        document.addEventListener('mousemove', resize);
-        document.addEventListener('mouseup', stopResize);
-        e.preventDefault();
-      }
-
-      function resize(e) {
-        if (!isResizing) return;
-        
-        const dx = e.clientX - startX;
-        const dy = e.clientY - startY;
-
-        let newWidth = startWidth;
-        let newHeight = startHeight;
-
-        switch(resizeEdge) {
-          case 'resize-e':
-            newWidth = Math.min(window.innerWidth, Math.max(300, startWidth + dx));
-            break;
-          case 'resize-s':
-            newHeight = Math.min(window.innerHeight, Math.max(200, startHeight + dy));
-            break;
-          case 'resize-se':
-            newWidth = Math.min(window.innerWidth, Math.max(300, startWidth + dx));
-            newHeight = Math.min(window.innerHeight, Math.max(200, startHeight + dy));
-            break;
-        }
-
-        popup.style.width = `${newWidth}px`;
-        popup.style.height = `${newHeight}px`;
-      }
-
-      function stopResize() {
-        isResizing = false;
-        popup.style.transition = 'all 0.2s ease';
-        document.removeEventListener('mousemove', resize);
-        document.removeEventListener('mouseup', stopResize);
-      }
-
-      // Close button
-      popup.querySelector('.popup-close').addEventListener('click', () => {
-        popup.remove();
-      });
-
-      // Bring to front when clicked
-      popup.addEventListener('mousedown', () => {
-        bringToFront(popup);
+    function attachInternalLinks(scope = document) {
+      scope.querySelectorAll('a[data-content]').forEach(a => {
+        a.onclick = e => {
+          e.preventDefault(); loadContent(a.getAttribute('data-content'));
+        };
       });
     }
 
-    function addJSONLD() {
-      const jsonLD = {
-        "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Vaibhav Vasudevan",
-        "url": "https://yourwebsite.com",
-        "sameAs": [
+    async function loadContent(file) {
+      try {
+        const res  = await fetch(file);
+        const html = await res.text();
+        const doc  = new DOMParser().parseFromString(html, 'text/html');
+        const header = area.querySelector('header');
+        const nav    = area.querySelector('.links');
+
+        area.classList.remove('loaded');
+        setTimeout(() => {
+          area.innerHTML = '';
+          area.appendChild(header);
+          area.appendChild(nav);
+          doc.querySelectorAll('section').forEach(s => area.appendChild(s.cloneNode(true)));
+          area.classList.add('loaded');
+          attachInternalLinks(area);
+          bring(win);
+        }, 300);
+      } catch (err) {
+        console.error('load error', err);
+      }
+    }
+
+    attachInternalLinks();   // initial links
+
+    /* ────────── image pop-ups (unchanged) ────────── */
+    document.addEventListener('click', e => {
+      const tag = e.target.closest('a[data-image]');
+      if (!tag) return;
+      e.preventDefault();
+
+      document.querySelectorAll('.image-popup').forEach(el => el.remove());
+
+      const pop = document.createElement('div');
+      pop.className = 'image-popup';
+      const rect = win.getBoundingClientRect();
+      pop.style.left = rect.right + 20 + 'px';
+      pop.style.top  = rect.top   + 'px';
+      pop.style.width = '400px'; pop.style.height = '300px';
+
+      pop.innerHTML = `
+        <div class="popup-title-bar">
+          <span>${tag.getAttribute('data-caption') || 'Image preview'}</span>
+          <button class="popup-close">×</button>
+        </div>
+        <div class="popup-content">
+          <img class="popup-image" src="${tag.getAttribute('data-image')}">
+          <div class="resize-handle resize-e"></div>
+          <div class="resize-handle resize-s"></div>
+          <div class="resize-handle resize-se"></div>
+        </div>`;
+      document.body.appendChild(pop);
+
+      setTimeout(() => { pop.classList.add('active'); bring(pop); }, 10);
+      initPopup(pop);
+    });
+
+    function initPopup(pop) {
+      let rs = false, edge, sw, sh, sx, sy;
+      const handles = pop.querySelectorAll('.resize-handle');
+      handles.forEach(h => h.onmousedown = e => {
+        rs = true; edge = h.classList[1];
+        sw = pop.offsetWidth; sh = pop.offsetHeight; sx = e.clientX; sy = e.clientY;
+        pop.style.transition = 'none'; e.preventDefault();
+        document.onmousemove = move; document.onmouseup = stop;
+      });
+      function move(e) {
+        if (!rs) return;
+        let nw = sw, nh = sh;
+        if (edge === 'resize-e'  || edge === 'resize-se') nw = Math.max(300, sw + e.clientX - sx);
+        if (edge === 'resize-s'  || edge === 'resize-se') nh = Math.max(200, sh + e.clientY - sy);
+        pop.style.width = nw + 'px'; pop.style.height = nh + 'px';
+      }
+      function stop() {
+        rs = false; pop.style.transition = 'all .2s ease';
+        document.onmousemove = document.onmouseup = null;
+      }
+      pop.querySelector('.popup-close').onclick = () => pop.remove();
+      pop.onmousedown = () => bring(pop);
+    }
+
+    /* ────────── JSON-LD ────────── */
+    (function(){
+      const j = {
+        "@context":"https://schema.org",
+        "@type":"Person",
+        "name":"Vaibhav Vasudevan",
+        "url":"https://yourwebsite.com",
+        "sameAs":[
           "https://www.linkedin.com/in/yourprofile",
           "https://github.com/yourgithub",
           "https://twitter.com/yourhandle"
         ],
-        "jobTitle": "Physics Student & Startup Founder",
-        "alumniOf": {
-          "@type": "EducationalOrganization",
-          "name": "University of Maryland"
-        },
-        "knowsAbout": ["Physics", "AI", "Startups", "Carnatic Violin"],
-        "worksFor": {
-          "@type": "Organization",
-          "name": "Procyon Photonics",
-          "url": "https://www.procyoncorp.io/"
-        },
-        "description": "Vaibhav Vasudevan is a physics student at UMD with experience in AI, startups, and photonic semiconductors."
+        "jobTitle":"Physics Student & Startup Founder",
+        "alumniOf":{"@type":"EducationalOrganization","name":"University of Maryland"},
+        "knowsAbout":["Physics","AI","Startups","Carnatic Violin"],
+        "worksFor":{"@type":"Organization","name":"Procyon Photonics","url":"https://www.procyoncorp.io/"},
+        "description":"Vaibhav Vasudevan is a physics student at UMD with experience in AI, startups, and photonic semiconductors."
       };
-
-      const script = document.createElement("script");
-      script.type = "application/ld+json";
-      script.textContent = JSON.stringify(jsonLD);
-      document.body.appendChild(script);
-    }
-
-    window.addEventListener("load", addJSONLD);
+      const s=document.createElement('script');s.type='application/ld+json';s.textContent=JSON.stringify(j);
+      document.body.appendChild(s);
+    })();
   </script>
 </body>
 </html>
