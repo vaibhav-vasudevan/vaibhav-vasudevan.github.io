@@ -53,9 +53,35 @@
       </div>
 
       <!-- default content (life) -->
-      <section><h2>about me</h2><p>…</p></section>
-      <section><h2>stuff i've done</h2><ul><li>…</li></ul></section>
-      <section><h2>stuff i want to do</h2><ul><li>…</li></ul></section>
+      <section>
+        <h2>about me</h2>
+        <p>
+          i grew up in omaha, nebraska until 6th grade. i moved to nova, went to tj, and currently study physics at umd.
+          i enjoy playing the carnatic violin, consuming all sorts of content,
+          and hanging out with my friends.
+        </p>
+      </section>
+
+      <section>
+        <h2>stuff i've done</h2>
+        <ul>
+          <li>did consulting for b2c startups — a learning experience but not ideal if you want to feel fulfilled</li>
+          <li>worked with close friends to build a vc-backed photonic semiconductor chip startup <a href="https://www.procyoncorp.io/">procyon photonics</a></li>
+          <li>harvard sociology project under <a href="https://sociology.fas.harvard.edu/people/adaner-usmani">dr. usmani</a> on historical incarceration; visited a jail</li>
+          <li>interned at wustl olin</li>
+          <li>curating top tier talent in the <a href="https://www.linkedin.com/feed/update/urn:li:activity:7276993719323508736/">dmv</a></li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>stuff i want to do</h2>
+        <ul>
+          <li>grow my own potatoes + goats on mountaintops</li>
+          <li>drive across a random desert like muad dib (instead of sandworms)</li>
+          <li>skydive at night</li>
+          <li>invest in people and host events</li>
+        </ul>
+      </section>
     </div>
   </div>
 
@@ -132,60 +158,4 @@
         audio.ontimeupdate=_=>{
           const pct=(audio.currentTime/audio.duration||0)*100;
           pr.style.width=pct+'%';
-          const m=Math.floor(audio.currentTime/60),s=Math.floor(audio.currentTime%60).toString().padStart(2,'0');
-          dur.textContent=`${m}:${s}`
-        };
-        pc.onclick=e=>{
-          const rect=pc.getBoundingClientRect();
-          audio.currentTime=((e.clientX-rect.left)/rect.width)*audio.duration
-        }
-      })
-    }
-
-    /* ────────── image pop-up (unchanged) ────────── */
-    document.addEventListener('click',e=>{
-      const tag=e.target.closest('a[data-image]');if(!tag)return;e.preventDefault();
-      document.querySelectorAll('.image-popup').forEach(el=>el.remove());
-      const pop=document.createElement('div');pop.className='image-popup';
-      const r=win.getBoundingClientRect();
-      pop.style.left=r.right+20+'px';pop.style.top=r.top+'px';
-      pop.style.width='400px';pop.style.height='300px';
-      pop.innerHTML=`<div class="popup-title-bar"><span>${tag.dataset.caption||'Image'}</span>
-        <button class="popup-close">×</button></div>
-        <div class="popup-content"><img class="popup-image" src="${tag.dataset.image}">
-        <div class="resize-handle resize-e"></div><div class="resize-handle resize-s"></div>
-        <div class="resize-handle resize-se"></div></div>`;
-      document.body.append(pop);setTimeout(()=>{pop.classList.add('active');bring(pop)},10);
-      initPopup(pop)
-    });
-    function initPopup(pop){
-      let rs=false,edge,sw,sh,sx,sy;
-      pop.querySelectorAll('.resize-handle').forEach(h=>h.onmousedown=e=>{
-        rs=true;edge=h.classList[1];sw=pop.offsetWidth;sh=pop.offsetHeight;sx=e.clientX;sy=e.clientY;
-        pop.style.transition='none';e.preventDefault();document.onmousemove=move;document.onmouseup=stop});
-      const move=e=>{
-        if(!rs)return;let nw=sw,nh=sh;
-        if(edge==='resize-e'||edge==='resize-se')nw=Math.max(300,sw+e.clientX-sx);
-        if(edge==='resize-s'||edge==='resize-se')nh=Math.max(200,sh+e.clientY-sy);
-        pop.style.width=nw+'px';pop.style.height=nh+'px'};
-      const stop=_=>{rs=false;pop.style.transition='all .2s ease';
-        document.onmousemove=document.onmouseup=null};
-      pop.querySelector('.popup-close').onclick=_=>pop.remove();
-      pop.onmousedown=_=>bring(pop)
-    }
-
-    /* ────────── JSON-LD (unchanged) ────────── */
-    (()=>{
-      const j={ "@context":"https://schema.org","@type":"Person","name":"Vaibhav Vasudevan",
-        "url":"https://yourwebsite.com","sameAs":[/* … */],
-        "jobTitle":"Physics Student & Startup Founder",
-        "alumniOf":{"@type":"EducationalOrganization","name":"University of Maryland"},
-        "knowsAbout":["Physics","AI","Startups","Carnatic Violin"],
-        "worksFor":{"@type":"Organization","name":"Procyon Photonics","url":"https://www.procyoncorp.io/"},
-        "description":"Vaibhav Vasudevan is a physics student at UMD with experience in AI, startups, and photonic semiconductors."};
-      const s=document.createElement('script');s.type='application/ld+json';
-      s.textContent=JSON.stringify(j);document.body.appendChild(s)
-    })();
-  </script>
-</body>
-</html>
+          const m=Math.floor(audio.current
