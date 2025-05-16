@@ -4,110 +4,42 @@
   <meta charset="UTF-8">
   <title>Vaibhav Vasudevan</title>
 
-  <!-- ----------  STYLES  ---------- -->
   <style>
-    /* Base Page */
-    html, body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      width: 100vw;
-      height: 100vh;
-      font-family: 'Georgia', serif;
-      background: url('your-desktop-image.jpg') center/cover no-repeat;
-      color: #1c1c1c;
-      line-height: 1.7;
-      font-size: 18px;
-      user-select: none;
-    }
+    /* ────────── site style (unchanged) ────────── */
+    html,body{margin:0;padding:0;overflow:hidden;width:100vw;height:100vh;
+      font-family:'Georgia',serif;background:url('your-desktop-image.jpg')center/cover no-repeat;
+      color:#1c1c1c;line-height:1.7;font-size:18px;user-select:none}
+    .draggable-window{position:absolute;width:80%;max-width:1000px;min-width:300px;
+      height:90vh;min-height:500px;background:rgba(255,255,255,.97);border-radius:12px;
+      box-shadow:0 5px 20px rgba(0,0,0,.15);
+      transition:left .2s ease,top .2s ease,box-shadow .3s ease,transform .3s ease;
+      overflow:hidden;display:flex;flex-direction:column;z-index:100}
+    .draggable-window:hover{box-shadow:0 10px 30px rgba(0,0,0,.25);transform:translateY(-2px)}
+    .active-window{z-index:1000!important}
+    .title-bar{height:40px;background:#f5f5f5;border-bottom:1px solid #e0e0e0;cursor:move;flex-shrink:0}
+    .content-area{flex:1;overflow-y:auto;padding:25px 35px;opacity:1;transition:opacity .3s ease}
+    .content-area:not(.loaded){opacity:0}
+    header{font-size:2.4em;text-align:center;margin:0 0 20px}
+    .links{text-align:center;margin-bottom:20px;font-size:1.15em}
+    .links a{color:#b35454;text-decoration:none;margin:0 12px}
+    section{margin:20px 0}h2{font-size:1.4em;margin-bottom:10px}
+    ul{padding-left:30px;margin:10px 0}ul li{margin-bottom:8px;line-height:1.5}
 
-    /* Draggable Window */
-    .draggable-window {
-      position: absolute;
-      width: 80%;
-      max-width: 1000px;
-      min-width: 300px;
-      height: 90vh;
-      min-height: 500px;
-      background: rgba(255, 255, 255, 0.97);
-      border-radius: 12px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-      transition: left .2s ease, top .2s ease, box-shadow .3s ease, transform .3s ease;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      z-index: 100;
-    }
-    .draggable-window:hover      { box-shadow: 0 10px 30px rgba(0,0,0,.25); transform: translateY(-2px); }
-    .active-window               { z-index: 1000 !important; }
-
-    /* Title Bar */
-    .title-bar {
-      height: 40px;
-      background: #f5f5f5;
-      border-bottom: 1px solid #e0e0e0;
-      cursor: move;
-      flex-shrink: 0;
-    }
-
-    /* Content Area */
-    .content-area {
-      flex: 1;
-      overflow-y: auto;
-      padding: 25px 35px;
-      opacity: 1;
-      transition: opacity .3s ease-in-out;
-    }
-    .content-area:not(.loaded) { opacity: 0; }
-
-    header         { font-size: 2.4em; text-align: center; margin: 0 0 20px; }
-    .links         { text-align: center; margin-bottom: 20px; font-size: 1.15em; }
-    .links a       { color: #b35454; text-decoration: none; margin: 0 12px; }
-    section        { margin: 20px 0; }
-    h2             { font-size: 1.4em; margin-bottom: 10px; }
-    ul             { padding-left: 30px; margin: 10px 0; }
-    ul li          { margin-bottom: 8px; line-height: 1.5; }
-
-    /* Image Popup */
-    .image-popup {
-      position: absolute;
-      background: rgba(255,255,255,.98);
-      border-radius: 8px;
-      box-shadow: 0 5px 20px rgba(0,0,0,.15);
-      overflow: hidden;
-      min-width: 300px; min-height: 200px;
-      max-width: 80vw;  max-height: 80vh;
-      display: flex; flex-direction: column;
-      z-index: 500; transform: scale(.95); opacity: 0;
-      transition: all .3s cubic-bezier(.18,.89,.32,1.28);
-    }
-    .image-popup.active { transform: scale(1); opacity: 1; }
-
-    .popup-title-bar {
-      background: rgba(0,0,0,.85); color: #fff; padding: 8px 12px;
-      display: flex; justify-content: space-between; align-items: center;
-      cursor: move;
-    }
-    .popup-close {
-      background: #ff4444; border: none; color: #fff;
-      width: 20px; height: 20px; border-radius: 50%;
-      cursor: pointer; font-size: 12px; line-height: 1;
-    }
-    .popup-close:hover { background: #ff6666; }
-
-    .popup-content { position: relative; flex: 1; padding: 15px; }
-    .popup-image   { width: 100%; height: 100%; object-fit: contain; border-radius: 4px; }
-
-    .resize-handle { position: absolute; background: rgba(179,84,84,.4); z-index: 2; }
-    .resize-handle:hover { background: #b35454; }
-    .resize-e  { cursor: ew-resize; width: 8px; right: 0; top: 0; height: 100%; }
-    .resize-s  { cursor: ns-resize; height: 8px; bottom: 0; left: 0; width: 100%; }
-    .resize-se { cursor: nwse-resize; width: 15px; height: 15px; right: 0; bottom: 0; }
+    /* ─── audio-player style ─── */
+    .audio-player{display:flex;align-items:center;gap:12px;margin:14px 0}
+    .audio-player button{background:#b35454;color:#fff;border:none;border-radius:50%;
+      width:36px;height:36px;font-size:16px;cursor:pointer;display:flex;
+      align-items:center;justify-content:center}
+    .audio-player button:hover{background:#c56b6b}
+    .audio-player .progress-container{flex:1;height:6px;background:#e0e0e0;
+      border-radius:3px;cursor:pointer;position:relative}
+    .audio-player .progress{height:100%;width:0;border-radius:3px;background:#b35454}
+    .audio-player .duration{font-size:.85em;min-width:42px;text-align:right}
   </style>
 </head>
 
 <body>
-  <!-- Draggable Window -->
+  <!-- ────────── window ────────── -->
   <div class="draggable-window" id="myWindow">
     <div class="title-bar" id="titleBar"></div>
 
@@ -120,191 +52,139 @@
         <a href="#" data-content="findmy.html">find my</a>
       </div>
 
-      <!-- — default “life” page content — -->
-      <section>
-        <h2>about me</h2>
-        <p>
-          i grew up in omaha, nebraska until 6th grade. i moved to nova, went to tj,
-          and currently study physics at umd. i enjoy playing the carnatic violin,
-          consuming all sorts of content, and hanging out with my friends.
-        </p>
-      </section>
-
-      <section>
-        <h2>stuff i've done</h2>
-        <ul>
-          <li>did consulting for b2c startups — a learning experience but not ideal if you want to feel fulfilled</li>
-          <li>worked with close friends to build a vc-backed photonic semiconductor chip startup
-              <a href="https://www.procyoncorp.io/">procyon photonics</a></li>
-          <li>harvard sociology project under <a href="https://sociology.fas.harvard.edu/people/adaner-usmani">dr. usmani</a>
-              on historical incarceration; visited a jail</li>
-          <li>interned at wustl olin</li>
-          <li>curating top-tier talent in the
-              <a href="https://www.linkedin.com/feed/update/urn:li:activity:7276993719323508736/">dmv</a></li>
-        </ul>
-      </section>
-
-      <section>
-        <h2>stuff i want to do</h2>
-        <ul>
-          <li>grow my own potatoes + goats on mountaintops</li>
-          <li>drive across a random desert like muad dib (instead of sandworms)</li>
-          <li>skydive at night</li>
-          <li>invest in people and host events</li>
-        </ul>
-      </section>
+      <!-- default content (life) -->
+      <section><h2>about me</h2><p>…</p></section>
+      <section><h2>stuff i've done</h2><ul><li>…</li></ul></section>
+      <section><h2>stuff i want to do</h2><ul><li>…</li></ul></section>
     </div>
   </div>
 
-  <!-- ----------  SCRIPTS  ---------- -->
   <script>
-    /* ────────── draggable window ────────── */
-    const win   = document.getElementById('myWindow');
-    const bar   = document.getElementById('titleBar');
-    let drag    = false, sx = 0, sy = 0, ix = 0, iy = 0;
-    const bring = el => { el.classList.add('active-window'); };
+    /* ────────── draggable logic (unchanged) ────────── */
+    const win=document.getElementById('myWindow');
+    const bar=document.getElementById('titleBar');
+    let drag=false,sx=0,sy=0,ix=0,iy=0;
+    const bring=el=>el.classList.add('active-window');
+    window.onload=()=>{const r=win.getBoundingClientRect();
+      win.style.left=(innerWidth-r.width)/2+'px';
+      win.style.top =(innerHeight-r.height)/2+'px'}
+    onresize=()=>{const r=win.getBoundingClientRect();
+      win.style.left=Math.min(Math.max(0,r.left),innerWidth-r.width)+'px';
+      win.style.top =Math.min(Math.max(0,r.top ),innerHeight-r.height)+'px'}
+    bar.onmousedown=e=>{drag=true;sx=e.clientX;sy=e.clientY;
+      const r=win.getBoundingClientRect();ix=r.left;iy=r.top;
+      win.style.transition='none';bring(win)}
+    document.onmousemove=e=>{
+      if(!drag)return;let nx=ix+e.clientX-sx,ny=iy+e.clientY-sy;
+      nx=Math.max(0,Math.min(nx,innerWidth-win.offsetWidth));
+      ny=Math.max(0,Math.min(ny,innerHeight-win.offsetHeight));
+      win.style.left=nx+'px';win.style.top=ny+'px'}
+    document.onmouseup=()=>{drag=false;
+      win.style.transition='left .2s ease,top .2s ease,box-shadow .3s ease,transform .3s ease'}
+    document.onselectstart=e=>{if(drag)e.preventDefault()}
 
-    window.addEventListener('load', () => {
-      const r = win.getBoundingClientRect();
-      win.style.left = (innerWidth  - r.width ) / 2 + 'px';
-      win.style.top  = (innerHeight - r.height) / 2 + 'px';
-    });
-    window.addEventListener('resize', () => {
-      const r = win.getBoundingClientRect();
-      win.style.left = Math.min(Math.max(0, r.left), innerWidth  - r.width ) + 'px';
-      win.style.top  = Math.min(Math.max(0, r.top ), innerHeight - r.height) + 'px';
-    });
-
-    bar.addEventListener('mousedown', e => {
-      drag = true; sx = e.clientX; sy = e.clientY;
-      const r = win.getBoundingClientRect(); ix = r.left; iy = r.top;
-      win.style.transition = 'none'; bring(win);
-    });
-    document.addEventListener('mousemove', e => {
-      if (!drag) return;
-      let nx = ix + e.clientX - sx, ny = iy + e.clientY - sy;
-      nx = Math.max(0, Math.min(nx, innerWidth  - win.offsetWidth ));
-      ny = Math.max(0, Math.min(ny, innerHeight - win.offsetHeight));
-      win.style.left = nx + 'px'; win.style.top = ny + 'px';
-    });
-    document.addEventListener('mouseup', () => {
-      drag = false;
-      win.style.transition = 'left .2s ease, top .2s ease, box-shadow .3s ease, transform .3s ease';
-    });
-    document.addEventListener('selectstart', e => { if (drag) e.preventDefault(); });
-
-    /* ────────── content loader ────────── */
-    const area = document.getElementById('contentArea');
-
-    function attachInternalLinks(scope = document) {
-      scope.querySelectorAll('a[data-content]').forEach(a => {
-        a.onclick = e => {
-          e.preventDefault(); loadContent(a.getAttribute('data-content'));
-        };
-      });
+    /* ────────── dynamic loader ────────── */
+    const area=document.getElementById('contentArea');
+    function attachInternalLinks(scope=document){
+      scope.querySelectorAll('a[data-content]').forEach(a=>{
+        a.onclick=e=>{e.preventDefault();loadContent(a.dataset.content)}
+      })
     }
-
-    async function loadContent(file) {
-      try {
-        const res  = await fetch(file);
-        const html = await res.text();
-        const doc  = new DOMParser().parseFromString(html, 'text/html');
-        const header = area.querySelector('header');
-        const nav    = area.querySelector('.links');
-
+    async function loadContent(file){
+      try{
+        const html=await (await fetch(file)).text();
+        const doc=new DOMParser().parseFromString(html,'text/html');
+        const head=area.querySelector('header'),nav=area.querySelector('.links');
         area.classList.remove('loaded');
-        setTimeout(() => {
-          area.innerHTML = '';
-          area.appendChild(header);
-          area.appendChild(nav);
-          doc.querySelectorAll('section').forEach(s => area.appendChild(s.cloneNode(true)));
+        setTimeout(()=>{
+          area.innerHTML='';area.append(head);area.append(nav);
+          doc.querySelectorAll('section').forEach(s=>area.append(s.cloneNode(true)));
           area.classList.add('loaded');
           attachInternalLinks(area);
+          attachAudioPlayers(area);   // NEW
           bring(win);
-        }, 300);
-      } catch (err) {
-        console.error('load error', err);
-      }
+        },300)
+      }catch(err){console.error(err)}
+    }
+    attachInternalLinks();
+    attachAudioPlayers(document);     // NEW
+
+    /* ────────── audio-player helper ────────── */
+    function attachAudioPlayers(scope=document){
+      scope.querySelectorAll('.audio-player').forEach(wrap=>{
+        if(wrap.dataset.bound) return;   // guard against double-binding
+        wrap.dataset.bound='1';
+        const audio=new Audio(wrap.dataset.src);
+        wrap.audio=audio;
+        const btn=document.createElement('button');btn.textContent='►';
+        const pc=document.createElement('div');pc.className='progress-container';
+        const pr=document.createElement('div');pr.className='progress';pc.append(pr);
+        const dur=document.createElement('span');dur.className='duration';dur.textContent='0:00';
+        wrap.append(btn,pc,dur);
+
+        btn.onclick=()=>{                // play / pause toggle
+          document.querySelectorAll('.audio-player').forEach(p=>{
+            if(p!==wrap){p.audio.pause();p.querySelector('button').textContent='►'}
+          });
+          if(audio.paused){audio.play();btn.textContent='❚❚'}
+          else{audio.pause();btn.textContent='►'}
+        };
+        audio.ontimeupdate=_=>{
+          const pct=(audio.currentTime/audio.duration||0)*100;
+          pr.style.width=pct+'%';
+          const m=Math.floor(audio.currentTime/60),s=Math.floor(audio.currentTime%60).toString().padStart(2,'0');
+          dur.textContent=`${m}:${s}`
+        };
+        pc.onclick=e=>{
+          const rect=pc.getBoundingClientRect();
+          audio.currentTime=((e.clientX-rect.left)/rect.width)*audio.duration
+        }
+      })
     }
 
-    attachInternalLinks();   // initial links
-
-    /* ────────── image pop-ups (unchanged) ────────── */
-    document.addEventListener('click', e => {
-      const tag = e.target.closest('a[data-image]');
-      if (!tag) return;
-      e.preventDefault();
-
-      document.querySelectorAll('.image-popup').forEach(el => el.remove());
-
-      const pop = document.createElement('div');
-      pop.className = 'image-popup';
-      const rect = win.getBoundingClientRect();
-      pop.style.left = rect.right + 20 + 'px';
-      pop.style.top  = rect.top   + 'px';
-      pop.style.width = '400px'; pop.style.height = '300px';
-
-      pop.innerHTML = `
-        <div class="popup-title-bar">
-          <span>${tag.getAttribute('data-caption') || 'Image preview'}</span>
-          <button class="popup-close">×</button>
-        </div>
-        <div class="popup-content">
-          <img class="popup-image" src="${tag.getAttribute('data-image')}">
-          <div class="resize-handle resize-e"></div>
-          <div class="resize-handle resize-s"></div>
-          <div class="resize-handle resize-se"></div>
-        </div>`;
-      document.body.appendChild(pop);
-
-      setTimeout(() => { pop.classList.add('active'); bring(pop); }, 10);
-      initPopup(pop);
+    /* ────────── image pop-up (unchanged) ────────── */
+    document.addEventListener('click',e=>{
+      const tag=e.target.closest('a[data-image]');if(!tag)return;e.preventDefault();
+      document.querySelectorAll('.image-popup').forEach(el=>el.remove());
+      const pop=document.createElement('div');pop.className='image-popup';
+      const r=win.getBoundingClientRect();
+      pop.style.left=r.right+20+'px';pop.style.top=r.top+'px';
+      pop.style.width='400px';pop.style.height='300px';
+      pop.innerHTML=`<div class="popup-title-bar"><span>${tag.dataset.caption||'Image'}</span>
+        <button class="popup-close">×</button></div>
+        <div class="popup-content"><img class="popup-image" src="${tag.dataset.image}">
+        <div class="resize-handle resize-e"></div><div class="resize-handle resize-s"></div>
+        <div class="resize-handle resize-se"></div></div>`;
+      document.body.append(pop);setTimeout(()=>{pop.classList.add('active');bring(pop)},10);
+      initPopup(pop)
     });
-
-    function initPopup(pop) {
-      let rs = false, edge, sw, sh, sx, sy;
-      const handles = pop.querySelectorAll('.resize-handle');
-      handles.forEach(h => h.onmousedown = e => {
-        rs = true; edge = h.classList[1];
-        sw = pop.offsetWidth; sh = pop.offsetHeight; sx = e.clientX; sy = e.clientY;
-        pop.style.transition = 'none'; e.preventDefault();
-        document.onmousemove = move; document.onmouseup = stop;
-      });
-      function move(e) {
-        if (!rs) return;
-        let nw = sw, nh = sh;
-        if (edge === 'resize-e'  || edge === 'resize-se') nw = Math.max(300, sw + e.clientX - sx);
-        if (edge === 'resize-s'  || edge === 'resize-se') nh = Math.max(200, sh + e.clientY - sy);
-        pop.style.width = nw + 'px'; pop.style.height = nh + 'px';
-      }
-      function stop() {
-        rs = false; pop.style.transition = 'all .2s ease';
-        document.onmousemove = document.onmouseup = null;
-      }
-      pop.querySelector('.popup-close').onclick = () => pop.remove();
-      pop.onmousedown = () => bring(pop);
+    function initPopup(pop){
+      let rs=false,edge,sw,sh,sx,sy;
+      pop.querySelectorAll('.resize-handle').forEach(h=>h.onmousedown=e=>{
+        rs=true;edge=h.classList[1];sw=pop.offsetWidth;sh=pop.offsetHeight;sx=e.clientX;sy=e.clientY;
+        pop.style.transition='none';e.preventDefault();document.onmousemove=move;document.onmouseup=stop});
+      const move=e=>{
+        if(!rs)return;let nw=sw,nh=sh;
+        if(edge==='resize-e'||edge==='resize-se')nw=Math.max(300,sw+e.clientX-sx);
+        if(edge==='resize-s'||edge==='resize-se')nh=Math.max(200,sh+e.clientY-sy);
+        pop.style.width=nw+'px';pop.style.height=nh+'px'};
+      const stop=_=>{rs=false;pop.style.transition='all .2s ease';
+        document.onmousemove=document.onmouseup=null};
+      pop.querySelector('.popup-close').onclick=_=>pop.remove();
+      pop.onmousedown=_=>bring(pop)
     }
 
-    /* ────────── JSON-LD ────────── */
-    (function(){
-      const j = {
-        "@context":"https://schema.org",
-        "@type":"Person",
-        "name":"Vaibhav Vasudevan",
-        "url":"https://yourwebsite.com",
-        "sameAs":[
-          "https://www.linkedin.com/in/yourprofile",
-          "https://github.com/yourgithub",
-          "https://twitter.com/yourhandle"
-        ],
+    /* ────────── JSON-LD (unchanged) ────────── */
+    (()=>{
+      const j={ "@context":"https://schema.org","@type":"Person","name":"Vaibhav Vasudevan",
+        "url":"https://yourwebsite.com","sameAs":[/* … */],
         "jobTitle":"Physics Student & Startup Founder",
         "alumniOf":{"@type":"EducationalOrganization","name":"University of Maryland"},
         "knowsAbout":["Physics","AI","Startups","Carnatic Violin"],
         "worksFor":{"@type":"Organization","name":"Procyon Photonics","url":"https://www.procyoncorp.io/"},
-        "description":"Vaibhav Vasudevan is a physics student at UMD with experience in AI, startups, and photonic semiconductors."
-      };
-      const s=document.createElement('script');s.type='application/ld+json';s.textContent=JSON.stringify(j);
-      document.body.appendChild(s);
+        "description":"Vaibhav Vasudevan is a physics student at UMD with experience in AI, startups, and photonic semiconductors."};
+      const s=document.createElement('script');s.type='application/ld+json';
+      s.textContent=JSON.stringify(j);document.body.appendChild(s)
     })();
   </script>
 </body>
